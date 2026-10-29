@@ -1,0 +1,10 @@
+<?php
+if(PHP_SAPI!=='cli')exit(1);
+require __DIR__.'/../.local/wordpress/wp-load.php';
+wp_set_current_user(1);$checks=[];$check=function($test,$pass)use(&$checks){$checks[]=['test'=>$test,'pass'=>(bool)$pass];echo ($pass?'PASS':'FAIL').': '.$test."\n";};
+$term=wp_insert_term('Disposable QA collection','product_cat',['slug'=>'qa-disposable-'.time(),'description'=>'Temporary test collection.']);$check('Administrator can create and edit a collection',!is_wp_error($term)&&current_user_can('manage_product_terms'));if(!is_wp_error($term)){$result=wp_update_term($term['term_id'],'product_cat',['description'=>'Updated QA description']);$check('Collection description saves',!is_wp_error($result)&&get_term($term['term_id'],'product_cat')->description==='Updated QA description');wp_delete_term($term['term_id'],'product_cat');}
+$image=wc_get_product(wc_get_product_id_by_sku('MM-DEMO-001'))->get_image_id();$previous=get_theme_mod('custom_logo');set_theme_mod('custom_logo',$image);$check('Dashboard logo setting accepts media',has_custom_logo());if($previous) set_theme_mod('custom_logo',$previous);else remove_theme_mod('custom_logo');
+$menu=wp_get_nav_menu_object('MUNEEB MART primary');$check('Primary navigation editable in WordPress',$menu&&count(wp_get_nav_menu_items($menu->term_id))===5&&current_user_can('edit_theme_options'));
+$page=get_page_by_path('about-us');$previousContent=$page->post_content;wp_update_post(['ID'=>$page->ID,'post_content'=>$previousContent.'<!-- QA editable content -->']);$check('Page content editable through WordPress APIs',str_contains(get_post($page->ID)->post_content,'QA editable content'));wp_update_post(wp_slash(['ID'=>$page->ID,'post_content'=>$previousContent]));
+$check('All expected support pages published',get_post_status(get_page_by_path('privacy-policy')->ID)==='publish'&&get_post_status(get_page_by_path('shipping-policy')->ID)==='publish'&&get_post_status(get_page_by_path('return-refund-policy')->ID)==='publish');
+file_put_contents(__DIR__.'/../.local/qa-admin.json',json_encode($checks,JSON_PRETTY_PRINT));exit(count(array_filter($checks,fn($c)=>!$c['pass']))?1:0);

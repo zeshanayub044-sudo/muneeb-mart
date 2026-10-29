@@ -1,0 +1,19 @@
+{
+  "brand": "MUNEEB MART",
+  "website_status": "localhost only, by owner request",
+  "local_url": "http://127.0.0.1:8088/",
+  "admin_url": "http://127.0.0.1:8088/wp-admin/",
+  "repository": "https://github.com/zeshanayub044-sudo/muneeb-mart",
+  "repository_visibility": "private",
+  "branch": "main",
+  "wordpress_version": "7.1.4",
+  "woocommerce_version": "11.2.1",
+  "theme": "muneeb-mart",
+  "theme_version": "1.1.0",
+  "products": 20,
+  "collections": 9,
+  "payment": "Development test gateway; no payment collected",
+  "checked_at": "2026-10-29T21:04:25+05:00",
+  "test_order_count": 2,
+  "original_test_order_preserved": true
+}

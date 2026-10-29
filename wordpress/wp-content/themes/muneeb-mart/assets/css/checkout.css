@@ -1,0 +1,18 @@
+/* Keep the final step focused and readable. Native WooCommerce remains in charge. */
+.woocommerce-checkout .primary-nav,.woocommerce-checkout .mobile-menu,.woocommerce-checkout .header-actions>:not(.bag-link),.woocommerce-checkout .newsletter,.woocommerce-checkout .footer-grid{display:none}
+.woocommerce-checkout .brand{grid-column:2}.woocommerce-checkout .header-actions{grid-column:3}.woocommerce-checkout .site-footer{padding-top:0}
+form.checkout.woocommerce-checkout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0 70px;align-items:start}
+form.checkout #customer_details{grid-column:1;grid-row:1;display:block}
+form.checkout #order_review_heading{grid-column:2;grid-row:1;padding-top:0;margin-bottom:25px;font-size:30px}
+form.checkout #order_review{grid-column:2;grid-row:1;align-self:start;margin-top:65px}
+form.checkout .col2-set .col-1,form.checkout .col2-set .col-2{width:100%;float:none}
+form.checkout .col2-set .col-2{clear:both;padding-top:20px}
+#payment .payment_methods{margin:0 0 20px;list-style:none}
+#payment .payment_methods label{font-size:12px;font-weight:600}
+#payment .payment_box{font-size:12px}
+#payment #place_order{width:100%;margin-top:20px}
+#shipping_method{list-style:none;padding:0;margin:0}
+.woocommerce-product-gallery{opacity:1!important}
+.category-tabs{scrollbar-width:none}.category-tabs::-webkit-scrollbar{display:none}
+@media(max-width:768px){form.checkout.woocommerce-checkout{display:block}form.checkout #order_review{margin-top:0}form.checkout #order_review_heading{padding-top:35px}.woocommerce-checkout .page-heading{margin-bottom:35px}}
+@media(max-width:600px){.woocommerce input.input-text,.woocommerce textarea,.woocommerce select:not(.orderby),.mm-contact-form input:not([type=checkbox]),.mm-contact-form textarea,.mm-contact-form select{font-size:16px}.hero-description{font-size:12px}.products .price{font-size:12px}.products .card-attribute{font-size:10px}.products li.product a.button{font-size:10px}.footer-grid>div>a:not(.wordmark){font-size:11px}.newsletter p:not(.eyebrow){font-size:12px}.newsletter-input input{font-size:16px}.search-dialog input{font-size:16px}.benefits p{font-size:10px}.wish-toggle{width:36px;height:36px}}

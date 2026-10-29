@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+const base='http://127.0.0.1:8088',cookies=new Map(),checks=[];
+async function request(url,options={}){const response=await fetch(new URL(url,base),{...options,redirect:'manual',headers:{Cookie:[...cookies].map(([k,v])=>`${k}=${v}`).join('; '),...options.headers},signal:AbortSignal.timeout(60000)});for(const c of response.headers.getSetCookie()){const pair=c.split(';')[0],i=pair.indexOf('=');cookies.set(pair.slice(0,i),pair.slice(i+1))}if(response.status>=300&&response.status<400&&response.headers.get('location'))return request(response.headers.get('location'));return {status:response.status,text:await response.text()}}
+const check=(test,pass)=>{checks.push({test,pass:Boolean(pass)});console.log(`${pass?'PASS':'FAIL'}: ${test}`)};
+await request('/wp-login.php');
+const access=fs.readFileSync('.local/access.txt','utf8');const username=access.match(/Username: (.+)/)?.[1].trim(),password=access.match(/Password: (.+)/)?.[1].trim();
+const login=await request('/wp-login.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams({log:username,pwd:password,'wp-submit':'Log In',redirect_to:base+'/wp-admin/',testcookie:'1'})});
+check('Actual administrator authentication and dashboard',login.status===200&&login.text.includes('wpadminbar')&&login.text.includes('Dashboard'));
+for(const [url,label,text] of [['/wp-admin/edit.php?post_type=product','Product management screen','Products'],['/wp-admin/admin.php?page=muneeb-mart','Store setup/settings screen','MUNEEB MART'],['/wp-admin/admin.php?page=wc-orders','WooCommerce order administration','Orders'],['/wp-admin/edit.php?post_type=mm_enquiry','Private enquiries administration','Store enquiries'],['/wp-admin/edit.php?post_type=mm_subscriber','Private subscribers administration','Subscribers']]){const r=await request(url);check(label,r.status===200&&r.text.includes(text)&&!r.text.includes('critical error'))}
+fs.writeFileSync('.local/qa-admin-http.json',JSON.stringify(checks,null,2));if(checks.some(x=>!x.pass))process.exitCode=1;

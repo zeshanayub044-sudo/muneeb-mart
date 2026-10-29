@@ -1,0 +1,23 @@
+<?php
+if(PHP_SAPI!=='cli')exit(1);
+require __DIR__.'/../.local/wordpress/wp-load.php';
+$checks=[];$check=function($name,$condition)use(&$checks){$checks[]=['test'=>$name,'pass'=>(bool)$condition];echo ($condition?'PASS':'FAIL').': '.$name."\n";};
+$products=wc_get_products(['limit'=>-1,'status'=>'publish']);$check('20 demonstration products',count($products)===20);
+$check('PKR currency',get_woocommerce_currency()==='PKR');$check('Custom theme active',get_stylesheet()==='muneeb-mart');
+$variable=wc_get_product(wc_get_product_id_by_sku('MM-DEMO-014'));$check('Variable product has two variations',$variable&&$variable->is_type('variable')&&count($variable->get_children())===2);
+$check('Out-of-stock product handled',!wc_get_product(wc_get_product_id_by_sku('MM-DEMO-019'))->is_in_stock());
+$check('Native cart/checkout/account pages',get_post(wc_get_page_id('cart'))&&get_post(wc_get_page_id('checkout'))&&get_post(wc_get_page_id('myaccount')));
+$terms=get_terms(['taxonomy'=>'product_cat','hide_empty'=>false]);$check('Nine managed collections',count(array_filter($terms,fn($t)=>$t->slug!=='uncategorized'))===9);
+$check('Four global filter attributes',count(wc_get_attribute_taxonomies())===4);
+$check('Product imagery attached',count(array_filter($products,fn($p)=>$p->get_image_id()>0))===20);
+$check('Local test gateway available',(WC()->payment_gateways()->payment_gateways()['mm_test']??null)?->is_available());
+update_option('mm_demo_mode',0);$check('Test gateway refuses when demo mode is off',!WC()->payment_gateways()->payment_gateways()['mm_test']->is_available());update_option('mm_demo_mode',1);
+wp_set_current_user(1);$test=new WC_Product_Simple();$test->set_name('Disposable QA watch');$test->set_sku('MM-QA-DISPOSABLE-'.time());$test->set_status('publish');$test->set_regular_price(100);$test->set_manage_stock(true);$test->set_stock_quantity(3);$id=$test->save();
+$test=wc_get_product($id);$test->set_regular_price(200);$test->set_image_id($products[0]->get_image_id());$test->save();$fresh=wc_get_product($id);$check('Admin product creation and price/image editing',$fresh->get_regular_price()==200&&$fresh->get_image_id()>0&&current_user_can('edit_post',$id));
+$check('New products automatically join new arrivals',has_term('new-arrivals','product_cat',$id));$fresh->delete(true);
+$old=get_theme_mod('mm_hero_title');set_theme_mod('mm_hero_title','QA editorial title');$check('Homepage settings can be saved',get_theme_mod('mm_hero_title')==='QA editorial title');if($old===false)remove_theme_mod('mm_hero_title');else set_theme_mod('mm_hero_title',$old);
+$check('Enquiries are private',get_post_type_object('mm_enquiry')->public===false);$check('Subscribers are private',get_post_type_object('mm_subscriber')->public===false);
+$check('Privacy exporter and eraser registered',isset(apply_filters('wp_privacy_personal_data_exporters',[])['muneeb-mart'])&&isset(apply_filters('wp_privacy_personal_data_erasers',[])['muneeb-mart']));
+file_put_contents(__DIR__.'/../.local/qa-backend.json',json_encode($checks,JSON_PRETTY_PRINT));
+$simple_id=wc_get_product_id_by_sku('MM-DEMO-001');$fixtures=['simple'=>$simple_id,'variable'=>$variable->get_id(),'variations'=>$variable->get_children(),'out_of_stock'=>wc_get_product_id_by_sku('MM-DEMO-019'),'stock_before'=>wc_get_product($simple_id)->get_stock_quantity()];file_put_contents(__DIR__.'/../.local/qa-fixtures.json',json_encode($fixtures,JSON_PRETTY_PRINT));
+exit(count(array_filter($checks,fn($c)=>!$c['pass']))?1:0);

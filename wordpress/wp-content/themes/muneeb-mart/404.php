@@ -1,0 +1,1 @@
+<?php get_header(); ?><main id="main" class="container page-main empty-state"><p class="eyebrow">A MOMENT OUT OF TIME · 404</p><h1>Let's find your way back.</h1><p>This page has moved or is no longer available.</p><a class="button" href="<?php echo esc_url(home_url('/catalog/')); ?>">Explore the collection <?php echo mm_icon('arrow'); ?></a></main><?php get_footer(); ?>
