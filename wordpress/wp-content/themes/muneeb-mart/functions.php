@@ -1,7 +1,8 @@
 <?php
 /** Theme presentation; commerce and content belong to WooCommerce and MUNEEB MART Core. */
 defined('ABSPATH') || exit;
-define('MM_THEME_VERSION', '1.1.0');
+define('MM_THEME_VERSION', '1.2.0');
+require_once get_template_directory().'/inc/journal.php';
 function mm_setup() {
     load_theme_textdomain('muneeb-mart', get_template_directory() . '/languages');
     add_theme_support('title-tag'); add_theme_support('post-thumbnails');
@@ -18,6 +19,7 @@ add_action('wp_enqueue_scripts', function() {
     wp_enqueue_style('mm-store', get_template_directory_uri().'/assets/css/store.css', [], MM_THEME_VERSION);
     wp_enqueue_style('mm-checkout',get_template_directory_uri().'/assets/css/checkout.css',['mm-store'],MM_THEME_VERSION);
     wp_enqueue_script('mm-store', get_template_directory_uri().'/assets/js/store.js', [], MM_THEME_VERSION, true);
+    if(function_exists('is_cart')&&is_cart())wp_enqueue_script('wc-cart-fragments');
     wp_localize_script('mm-store','mmStore',['catalog'=>function_exists('wc_get_page_permalink')?wc_get_page_permalink('shop'):home_url('/catalog/'),'productEndpoint'=>rest_url('wc/store/v1/products/'),'wishlist'=>home_url('/wishlist/')]);
     $accent = sanitize_hex_color(get_theme_mod('mm_accent','#b79b62'));
     wp_add_inline_style('mm-store', ':root{--gold:'.($accent ?: '#b79b62').';}');
@@ -29,7 +31,7 @@ function mm_icon($name, $class='') {
 function mm_image($file) { return get_template_directory_uri().'/assets/images/'.$file; }
 function mm_mod($key,$default='') { return get_theme_mod('mm_'.$key,$default); }
 function mm_collection_url($slug) { $term=get_term_by('slug',$slug,'product_cat'); return $term && !is_wp_error($term) ? get_term_link($term) : home_url('/collections/'); }
-function mm_primary_fallback() { foreach([''=>'Home','catalog/'=>'Catalog','collections/'=>'Collections','about-us/'=>'About Us','contact-us/'=>'Contact'] as $url=>$label) echo '<a href="'.esc_url(home_url('/'.$url)).'"'.((($url===''&&is_front_page())||($url&&is_page(trim($url,'/')))||($url==='catalog/'&&function_exists('is_shop')&&is_shop()))?' aria-current="page"':'').'>'.esc_html($label).'</a>'; }
+function mm_primary_fallback() { foreach([''=>'Home','catalog/'=>'Shop','collections/'=>'Collections','journal/'=>'Journal','about-us/'=>'About','contact-us/'=>'Contact'] as $url=>$label) echo '<a href="'.esc_url(home_url('/'.$url)).'"'.((($url===''&&is_front_page())||($url&&is_page(trim($url,'/')))||($url==='catalog/'&&function_exists('is_shop')&&is_shop()))?' aria-current="page"':'').'>'.esc_html($label).'</a>'; }
 function mm_products($args=[]) {
     if(!function_exists('wc_get_products')) return;
     $items=wc_get_products(array_merge(['status'=>'publish','limit'=>4,'orderby'=>'date','order'=>'DESC','visibility'=>'catalog'],$args));
@@ -51,7 +53,7 @@ add_action('woocommerce_single_product_summary',function(){global $product;echo 
 add_filter('woocommerce_structured_data_product',function($data){return get_option('mm_demo_mode')?[]:$data;});
 add_filter('woocommerce_product_tabs',function($tabs){
     if(isset($tabs['reviews']) && get_comments_number()===0) unset($tabs['reviews']);
-    $tabs['care']=['title'=>__('Care & guidance','muneeb-mart'),'priority'=>40,'callback'=>function(){echo '<h2>Care & guidance</h2><p>Keep your watch away from extreme temperatures, chemicals, and moisture unless its verified specifications permit exposure. Clean gently with a dry soft cloth. Have servicing carried out by a qualified professional.</p><p>Demo specifications and imagery are illustrative. Confirm final product details before purchasing.</p>'; }];
+    $tabs['care']=['title'=>__('Care & guidance','muneeb-mart'),'priority'=>40,'callback'=>function(){echo '<h2>Size, fit & care</h2><p><a href="'.esc_url(home_url('/watch-size-guide/')).'">Watch size guide</a> · <a href="'.esc_url(home_url('/watch-care-guide/')).'">Watch care guide</a></p><p>Keep your watch away from extreme temperatures, chemicals, and moisture unless its verified specifications permit exposure. Clean gently with a dry soft cloth. Have servicing carried out by a qualified professional.</p><p>Demo specifications and imagery are illustrative. Confirm final product details before purchasing.</p>'; }];
     $tabs['shipping']=['title'=>__('Shipping & returns','muneeb-mart'),'priority'=>30,'callback'=>function(){echo '<h2>Shipping & returns</h2><p>Available shipping methods and costs are shown at checkout when configured.</p><p><a href="'.esc_url(home_url('/shipping-policy/')).'">Shipping policy</a> · <a href="'.esc_url(home_url('/return-refund-policy/')).'">Returns policy</a></p>';}]; return $tabs;
 });
 add_filter('woocommerce_catalog_orderby',function($options){return ['date'=>'Newest arrivals','price'=>'Price: low to high','price-desc'=>'Price: high to low','title'=>'Name: A–Z'];});
@@ -61,7 +63,7 @@ add_filter('woocommerce_get_catalog_ordering_args',function($args){if(isset($_GE
 add_action('customize_register',function($c){
     $c->add_section('mm_editorial',['title'=>'MUNEEB MART · Store design','priority'=>30]);
     $fields=['announcement'=>['Announcement','TIMELESS STYLE. MODERN ELEGANCE.'],'eyebrow'=>['Hero eyebrow','THE ART OF KEEPING TIME'],'hero_title'=>['Hero headline','Time is the ultimate luxury.'],'hero_text'=>['Hero description','Exceptional watches. Considered design. Find a timepiece that feels unmistakably you.'],'hero_cta'=>['Hero button','Explore the collection'],'curated_title'=>['Collection headline','A watch for every version of you.'],'selection_title'=>['Featured product heading','Considered. Curated. Yours.'],'story_title'=>['Story headline','More than a watch. A statement.'],'story_text'=>['Story paragraph','A watch is personal. It speaks to who you are, how you move, and what matters to you. At MUNEEB MART, we bring together distinctive designs for a style that is entirely your own.'],'campaign_title'=>['Campaign headline','Find your signature.'],'footer_text'=>['Footer description','Thoughtfully curated watches for the moments that make you.'],'support_email'=>['Published support email',''],'phone'=>['Published phone / WhatsApp',''],'hours'=>['Published business hours',''],'instagram'=>['Instagram URL',''],'facebook'=>['Facebook URL','']];
-    $fields=array_merge($fields,['arrivals_title'=>['New arrivals heading','New to the collection.'],'newsletter_title'=>['Newsletter heading','The art of timeless style.'],'newsletter_text'=>['Newsletter description','New collections, thoughtful edits, and a little inspiration.'],'men_title'=>['Men’s collection card title','For him.'],'men_text'=>['Men’s collection card description','Distinctive by nature.'],'women_title'=>['Women’s collection card title','For her.'],'women_text'=>['Women’s collection card description','Elegance in every detail.'],'classic_title'=>['Classic collection card title','The classics.'],'classic_text'=>['Classic collection card description','Always in good taste.']]);
+    $fields=array_merge($fields,['chrono_title'=>['Chronograph card title','Chronograph style.'],'chrono_text'=>['Chronograph card description','A layered perspective.'],'minimal_title'=>['Minimalist card title','Minimalist watches.'],'minimal_text'=>['Minimalist card description','Less, thoughtfully considered.'],'arrivals_title'=>['New arrivals heading','New to the collection.'],'newsletter_title'=>['Newsletter heading','The art of timeless style.'],'newsletter_text'=>['Newsletter description','New collections, thoughtful edits, and a little inspiration.'],'men_title'=>['Men’s collection card title','For him.'],'men_text'=>['Men’s collection card description','Distinctive by nature.'],'women_title'=>['Women’s collection card title','For her.'],'women_text'=>['Women’s collection card description','Elegance in every detail.'],'classic_title'=>['Classic collection card title','The classics.'],'classic_text'=>['Classic collection card description','Always in good taste.']]);
     foreach($fields as $id=>$field){$c->add_setting('mm_'.$id,['default'=>$field[1],'sanitize_callback'=>in_array($id,['instagram','facebook'],true)?'esc_url_raw':($id==='support_email'?'sanitize_email':'sanitize_text_field')]);$c->add_control('mm_'.$id,['section'=>'mm_editorial','label'=>$field[0],'type'=>in_array($id,['hero_text','story_text','footer_text'],true)?'textarea':'text']);}
     $c->add_setting('mm_accent',['default'=>'#b79b62','sanitize_callback'=>'sanitize_hex_color']);$c->add_control(new WP_Customize_Color_Control($c,'mm_accent',['label'=>'Accent color','section'=>'mm_editorial']));
     foreach(['hero_image'=>'Hero photograph','story_image'=>'Story photograph'] as $id=>$label){$c->add_setting('mm_'.$id,['sanitize_callback'=>'esc_url_raw']);$c->add_control(new WP_Customize_Image_Control($c,'mm_'.$id,['section'=>'mm_editorial','label'=>$label]));}
@@ -69,12 +71,21 @@ add_action('customize_register',function($c){
 add_action('wp_head',function(){
     if(!has_site_icon())echo '<link rel="icon" type="image/svg+xml" href="'.esc_url(mm_image('favicon.svg')).'">';
     if(get_option('mm_demo_mode')) echo '<meta name="robots" content="noindex,nofollow">';
-    if(!defined('WPSEO_VERSION')&&!defined('RANK_MATH_VERSION')) { $description=is_front_page()?'Discover thoughtfully curated watches at MUNEEB MART. Classic silhouettes, contemporary details, and a style of your own.':wp_strip_all_tags(get_the_excerpt());if(is_tax())$description=wp_strip_all_tags(term_description());if(function_exists('is_shop')&&is_shop())$description='Explore the MUNEEB MART watch collection. Filter by style, strap, dial, finish, and price to find your signature timepiece.';if($description) echo '<meta name="description" content="'.esc_attr(wp_trim_words($description,30,'')).'">'; }
     if(!defined('WPSEO_VERSION')&&!defined('RANK_MATH_VERSION')) {
-        $url=is_singular()?get_permalink():home_url('/');
-        if(function_exists('is_shop')&&is_shop())$url=wc_get_page_permalink('shop');
-        elseif(function_exists('is_product_taxonomy')&&is_product_taxonomy()){$term_url=get_term_link(get_queried_object());if(!is_wp_error($term_url))$url=$term_url;}
+        $description=is_front_page()?'Discover thoughtfully curated watches at MUNEEB MART. Classic silhouettes, contemporary details, and a style of your own.':(is_singular()?wp_strip_all_tags(get_the_excerpt(get_queried_object_id())):'Explore the MUNEEB MART Watch Journal for practical watch style, buying, care and gifting guides.');
+        if(is_tax()||is_category()||is_tag())$description=wp_strip_all_tags(term_description());
+        if(function_exists('is_shop')&&is_shop())$description='Explore the MUNEEB MART watch collection. Filter by style, strap, dial, finish, and price to find your signature timepiece.';
+        if(is_singular())$description=get_post_meta(get_queried_object_id(),'_mm_meta_description',true)?:$description;
+        if($description)echo '<meta name="description" content="'.esc_attr(wp_trim_words($description,45,'')).'">';
+        $url=is_singular()?get_permalink():get_pagenum_link(max(1,(int)get_query_var('paged')));
+        if(function_exists('is_shop')&&is_shop()&&!is_paged())$url=wc_get_page_permalink('shop');
+        elseif(function_exists('is_product_taxonomy')&&is_product_taxonomy()&&!is_paged()){$term_url=get_term_link(get_queried_object());if(!is_wp_error($term_url))$url=$term_url;}
         if(!is_singular()&&!is_search()&&!is_404())echo '<link rel="canonical" href="'.esc_url($url).'">';
-        echo '<meta property="og:title" content="'.esc_attr(wp_get_document_title()).'"><meta property="og:type" content="website"><meta property="og:url" content="'.esc_url($url).'"><meta property="og:site_name" content="MUNEEB MART"><meta property="og:image" content="'.esc_url(is_singular()&&has_post_thumbnail()?get_the_post_thumbnail_url(null,'large'):mm_image('hero.webp')).'">';
+        echo '<meta property="og:title" content="'.esc_attr(wp_get_document_title()).'"><meta property="og:type" content="'.(is_singular('post')?'article':'website').'"><meta property="og:url" content="'.esc_url($url).'"><meta property="og:description" content="'.esc_attr($description).'"><meta property="og:site_name" content="MUNEEB MART"><meta property="og:image" content="'.esc_url(is_singular()&&has_post_thumbnail()?get_the_post_thumbnail_url(null,'large'):mm_image('hero.webp')).'">';
+        if(is_singular('post')){
+            $post=get_queried_object();$schema=['@context'=>'https://schema.org','@type'=>'BlogPosting','headline'=>get_the_title($post),'description'=>$description,'datePublished'=>get_the_date('c',$post),'dateModified'=>get_the_modified_date('c',$post),'mainEntityOfPage'=>get_permalink($post),'author'=>['@type'=>'Person','name'=>get_the_author_meta('display_name',$post->post_author)],'publisher'=>['@type'=>'Organization','name'=>'MUNEEB MART','url'=>home_url('/')]];if(has_post_thumbnail($post))$schema['image']=get_the_post_thumbnail_url($post,'large');
+            if(str_contains($schema['author']['name'],'MUNEEB MART'))$schema['author']['@type']='Organization';
+            echo '<script type="application/ld+json">'.wp_json_encode($schema,JSON_HEX_TAG|JSON_HEX_AMP|JSON_HEX_APOS|JSON_HEX_QUOT|JSON_UNESCAPED_SLASHES).'</script>';
+        }
     }
 });

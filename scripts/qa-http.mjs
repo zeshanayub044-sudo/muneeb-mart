@@ -6,12 +6,12 @@ const post=(url,data)=>request(url,{method:'POST',headers:{'Content-Type':'appli
 const count=html=>(html.match(/class="woocommerce-loop-product__title"/g)||[]).length;
 const getNonce=(html,name)=>html.match(new RegExp('name="'+name+'" value="([^"]+)"'))?.[1];
 try{
- const home=await request('/');check('Homepage serves custom theme',home.status===200&&home.text.includes('Time is the ultimate luxury.'),`${home.ms} ms, ${home.text.length} HTML chars`);
+ const home=await request('/');check('Homepage serves custom theme',home.status===200&&home.text.includes('Timeless elegance. Every second.'),`${home.ms} ms, ${home.text.length} HTML chars`);
  check('Development store is noindex',home.text.includes('noindex'));
  const urls=['/catalog/','/collections/','/about-us/','/contact-us/','/cart/','/checkout/','/my-account/','/wishlist/','/privacy-policy/','/terms-conditions/','/shipping-policy/','/return-refund-policy/','/frequently-asked-questions/'];
  for(const url of urls){const r=await request(url);check('Page '+url,r.status===200&&!r.text.includes('critical error'),`${r.ms} ms`)}
  const catalog=await request('/catalog/');check('Catalog paginates 20 products',count(catalog.text)===12&&catalog.text.includes('page-numbers'));
- for(const slug of ['mens-watches','womens-watches','classic','minimalist','chronograph','luxury-inspired','sports','new-arrivals','gifts']){const r=await request('/collections/'+slug+'/');check('Collection '+slug,r.status===200&&count(r.text)>0)}
+ for(const slug of ['mens-watches','womens-watches','classic','minimalist','chronograph','luxury-inspired','sports','new-arrivals','gifts','executive','budget']){const r=await request('/collections/'+slug+'/');check('Collection '+slug,r.status===200&&count(r.text)>0)}
  const filtered=await request('/catalog/?filter_strap-material=leather');check('Strap filter applies to real WooCommerce products',count(filtered.text)>0&&count(filtered.text)<12&&filtered.text.includes('MUNEEB Heritage Classic'));
  const price=await request('/catalog/?min_price=14000&max_price=16000');check('Price range filter',count(price.text)===2,`${count(price.text)} matches`);
  const combined=await request('/catalog/?filter_strap-material=steel&filter_dial-color=black&in_stock=1');check('Combined attribute and stock filters',count(combined.text)>0&&!combined.text.includes('>MUNEEB Essential 01</h2>'));

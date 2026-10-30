@@ -1,1 +1,14 @@
-{"name":"muneeb-mart-wordpress","version":"1.1.0","private":true,"description":"MUNEEB MART WordPress and WooCommerce theme, plugin, and local development tools","scripts":{"start":"node scripts/local.mjs start","sync":"node scripts/local.mjs sync","check:php":"node scripts/local.mjs lint","check:js":"node --check wordpress/wp-content/themes/muneeb-mart/assets/js/store.js","package":"python scripts/package.py"}}
+{
+  "name": "muneeb-mart-wordpress",
+  "version": "1.2.0",
+  "private": true,
+  "description": "MUNEEB MART WordPress and WooCommerce theme, plugin, and local development tools",
+  "scripts": {
+    "start": "node scripts/local.mjs start",
+    "sync": "node scripts/local.mjs sync",
+    "check:php": "node scripts/local.mjs lint",
+    "check:js": "node --check wordpress/wp-content/themes/muneeb-mart/assets/js/store.js",
+    "package": "python scripts/package.py",
+    "backup": ".local/php.exe scripts/backup-local.php"
+  }
+}

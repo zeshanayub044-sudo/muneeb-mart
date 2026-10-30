@@ -7,7 +7,13 @@ if ($Stop) {
         $state = Get-Content -LiteralPath $statePath -Raw | ConvertFrom-Json
         foreach ($processId in @($state.php, $state.database)) {
             $ownedProcess = Get-Process -Id $processId -ErrorAction SilentlyContinue
-            if ($ownedProcess -and $ownedProcess.Path -and $ownedProcess.Path.StartsWith(((Join-Path $projectRoot '.local') + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) { Stop-Process -Id $processId }
+            if ($ownedProcess -and $ownedProcess.Path -and $ownedProcess.Path.StartsWith(((Join-Path $projectRoot '.local') + [IO.Path]::DirectorySeparatorChar), [StringComparison]::OrdinalIgnoreCase)) {
+                if ($processId -eq $state.database) {
+                    # Flush InnoDB and Aria safely; never force-terminate the database.
+                    & (Join-Path $projectRoot '.local\mariadb-11.4.13-winx64\bin\mariadb-admin.exe') --no-defaults --host=127.0.0.1 --port=3308 --user=root shutdown
+                    if ($LASTEXITCODE -ne 0) { throw 'Graceful database shutdown failed. Database process was left running.' }
+                } else { Stop-Process -Id $processId }
+            }
         }
     }
     Write-Output 'Local store stopped.'

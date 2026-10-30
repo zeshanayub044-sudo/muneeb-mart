@@ -1,0 +1,293 @@
+{
+  "date": "2026-10-30",
+  "method": "Browser viewport measurements; 15px native vertical scrollbar. Results transcribed from observed browser tool output after a preview session reset.",
+  "checks": [
+    {
+      "page": "/journal/",
+      "width": 320,
+      "available": 305,
+      "document": 305,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 375,
+      "available": 360,
+      "document": 360,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 430,
+      "available": 415,
+      "document": 415,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 768,
+      "available": 753,
+      "document": 753,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 1024,
+      "available": 1009,
+      "document": 1009,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 1440,
+      "available": 1425,
+      "document": 1425,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/journal/",
+      "width": 1920,
+      "available": 1905,
+      "document": 1905,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 320,
+      "available": 305,
+      "document": 305,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 375,
+      "available": 360,
+      "document": 360,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 430,
+      "available": 415,
+      "document": 415,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 768,
+      "available": 753,
+      "document": 753,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 1024,
+      "available": 1009,
+      "document": 1009,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 1440,
+      "available": 1425,
+      "document": 1425,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/choose-watch-as-thoughtful-gift/",
+      "width": 1920,
+      "available": 1905,
+      "document": 1905,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 320,
+      "available": 305,
+      "document": 305,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 375,
+      "available": 360,
+      "document": 360,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 430,
+      "available": 415,
+      "document": 415,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 768,
+      "available": 753,
+      "document": 753,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 1024,
+      "available": 1009,
+      "document": 1009,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 1440,
+      "available": 1425,
+      "document": 1425,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/",
+      "width": 1920,
+      "available": 1905,
+      "document": 1905,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 320,
+      "available": 305,
+      "document": 305,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 375,
+      "available": 360,
+      "document": 360,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 430,
+      "available": 415,
+      "document": 415,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 768,
+      "available": 753,
+      "document": 753,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 1024,
+      "available": 1009,
+      "document": 1009,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 1440,
+      "available": 1425,
+      "document": 1425,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "page": "/catalog/",
+      "width": 1920,
+      "available": 1905,
+      "document": 1905,
+      "overflow": false,
+      "brokenImages": 0
+    },
+    {
+      "available": 305,
+      "brokenImages": 0,
+      "document": 305,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 320
+    },
+    {
+      "available": 360,
+      "brokenImages": 0,
+      "document": 360,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 375
+    },
+    {
+      "available": 415,
+      "brokenImages": 0,
+      "document": 415,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 430
+    },
+    {
+      "available": 753,
+      "brokenImages": 0,
+      "document": 753,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 768
+    },
+    {
+      "available": 1009,
+      "brokenImages": 0,
+      "document": 1009,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 1024
+    },
+    {
+      "available": 1425,
+      "brokenImages": 0,
+      "document": 1425,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 1440
+    },
+    {
+      "available": 1905,
+      "brokenImages": 0,
+      "document": 1905,
+      "overflow": false,
+      "page": "/checkout/",
+      "width": 1920
+    }
+  ],
+  "interactions": [
+    "Mobile navigation opened and its Home link navigated correctly.",
+    "Homepage renders four collection cards and three latest Journal posts.",
+    "Article contents link set the correct fragment and revealed its heading.",
+    "Browser product add-to-cart led to a real WooCommerce cart and checkout.",
+    "After removing the last browser cart item, native WooCommerce fragments refreshed the header count from 1 to 0 without reloading."
+  ]
+}

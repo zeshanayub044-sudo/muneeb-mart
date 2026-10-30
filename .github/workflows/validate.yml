@@ -16,7 +16,11 @@ jobs:
       - name: PHP syntax
         run: find wordpress/wp-content/themes/muneeb-mart wordpress/wp-content/plugins/muneeb-mart-core scripts -name '*.php' -print0 | xargs -0 -n1 php -l
       - name: JavaScript syntax
-        run: node --check wordpress/wp-content/themes/muneeb-mart/assets/js/store.js
+        run: |
+          node --check wordpress/wp-content/themes/muneeb-mart/assets/js/store.js
+          find scripts -name '*.mjs' -print0 | xargs -0 -n1 node --check
+      - name: Validate demonstration content
+        run: node scripts/validate-content.mjs
       - name: Package installable archives
         run: |
           mkdir -p releases

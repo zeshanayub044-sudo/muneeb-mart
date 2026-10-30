@@ -1,53 +1,59 @@
 # MUNEEB MART · The Watch Edit
 
-An installable WordPress theme and WooCommerce companion plugin for an editorial watch boutique. The storefront uses native WooCommerce products, inventory, cart, checkout, customer accounts, and orders. It is not a static storefront or a React substitute.
+An original WordPress theme and WooCommerce companion plugin for a premium watch boutique, with a native WordPress Watch Journal. Products, inventory, cart, checkout, accounts and orders use WooCommerce. Version **1.2.0** adds eight original articles, ten blog categories, editorial templates, SEO editing, additional collections and customer guides.
 
-**Current delivery: localhost only**, as requested by the owner. Source repository: [zeshanayub044-sudo/muneeb-mart](https://github.com/zeshanayub044-sudo/muneeb-mart), private, branch `main`. Version 1.1.0 uses **MUNEEB MART** throughout the custom source and the installed WordPress store.
+Source: [zeshanayub044-sudo/muneeb-mart](https://github.com/zeshanayub044-sudo/muneeb-mart), private, branch `main`.
 
-## Try the installed local store
+## Run the installed store
 
-On this computer, run `npm start`, then open <http://127.0.0.1:8088>. Administration is at `/wp-admin/`. Random local credentials are in `.local/access.txt`; this ignored file must stay private. Stop the owned local processes with `powershell -ExecutionPolicy Bypass -File scripts/start-local.ps1 -Stop`.
+Run `npm start`, then open <http://127.0.0.1:8088/>. The Journal is at `/journal/` and administration at `/wp-admin/`. Local credentials are in ignored `.local/access.txt`; keep that file private. The portable PHP/MariaDB/WordPress environment lives in `.local/`, binds to loopback and installs no Windows service.
 
-The portable environment lives entirely in ignored `.local/`: PHP 8.3 with opcode caching, MariaDB 11.4, WordPress, and runtime content. It binds to loopback only. No system service is installed. Custom, version-controlled source lives in `wordpress/wp-content/`. After source edits, run `npm run sync` to refresh the local copy. Do not rerun `bootstrap.php` on an existing store; it is a first-install utility.
+After source changes, run `npm run sync` to copy only custom code into the local WordPress runtime. Content, orders, users, stock and uploaded media remain in the database/uploads. Run `npm run backup` for a private SQL/config/media export. Stop gracefully with `powershell -ExecutionPolicy Bypass -File scripts/start-local.ps1 -Stop`. Do not rerun `bootstrap.php` on an existing store.
 
-## Install on WordPress hosting
+## Included
 
-1. Use PHP 8.3+, MySQL 8+ or MariaDB 10.6+, HTTPS, and at least 256 MB WordPress memory. Follow current [WooCommerce server recommendations](https://woocommerce.com/document/server-requirements/).
-2. Install WordPress and WooCommerce. Upload `releases/muneeb-mart-theme.zip` under Appearance → Themes and activate it.
-3. Upload `releases/muneeb-mart-core.zip` under Plugins → Add New and activate it.
-4. On a development store, go to WooCommerce → MUNEEB MART setup → **Prepare demonstration store**. This imports missing pages, 20 fictional watches, original generated imagery, global attributes, a variation product, and nine collections. Existing SKUs and pages are preserved.
-5. Set the WordPress environment to `development` in private `wp-config.php` to make the development test gateway available. The gateway also requires demo mode. Production environments never offer it.
-6. Configure shipping zones separately. The local-only seeding script creates an explicitly labelled development delivery method; the dashboard importer does not create shipping promises.
+- Original classic PHP theme, `theme.json`, block editor support, replaceable logo, menus, Customizer text/images/colors and responsive store layouts.
+- Twenty fictional watch products, eleven editable product collections, four global attributes, two variations, inventory and native WooCommerce shopping/account endpoints.
+- Native Journal with eight original articles of approximately 1,060–1,150 words each, ten categories, featured story, search, pagination, author/date/reading time, contents links, sharing, related articles and product recommendations. The homepage queries the three latest published posts.
+- Editable SEO title/description for posts, pages and products, Open Graph, canonical URLs, BlogPosting schema and native WordPress sitemap readiness. Demo products suppress unsupported Product schema.
+- Catalog search/filter/sort/pagination, original optimized WebP photography, browser-local wishlist, mobile menu, keyboard focus and reduced-motion support.
+- Privately stored consent-based enquiries/subscriptions with validation, nonces, honeypot, rate limits and WordPress privacy export/erasure.
+- Development-only gateway creates on-hold TEST orders without collecting payment. Native WooCommerce administration manages those orders.
+- Size/care/gift/support/payment guides and native order tracking. Policy pages remain owner-review drafts.
 
-See [installation](docs/installation.md), [deployment](docs/deployment.md), [owner guide](docs/admin-guide.md), and [testing](docs/testing.md).
+## Install elsewhere
+
+Use a host compatible with the current [WooCommerce server requirements](https://woocommerce.com/document/server-requirements/), HTTPS and sufficient memory. Install official WordPress and WooCommerce, then upload the theme/core ZIPs from `releases/`. In WooCommerce → MUNEEB MART setup, prepare demonstration content. The Journal/support importer preserves existing posts and products. On the existing local store, `scripts/expand-local.php` adds only the extension.
+
+The test gateway requires both demo mode and a private `WP_ENVIRONMENT_TYPE` of `development` or `local`; it never activates for production. Configure shipping separately. Native COD, bank transfer and online gateways remain inactive until their real settings and tests are complete.
+
+## Hosting and deployment status
+
+The working installation is currently on localhost. The owner requested a $0 public deployment. [Hosting research](docs/hosting-setup.md) records free-tier limits and actual signup observations. Owner registration/verification and real-host tests are required before claiming a public URL or certified checkout. No paid plan, domain or service is authorised.
+
+GitHub Actions validates PHP/JavaScript and packages installable artifacts. It does not deploy automatically. Secure FTPS deployment must target only custom code, preserve the database/uploads, and be verified before being described as automatic. Never commit credentials, `wp-config.php`, database exports or customer data.
+
+## Documentation
+
+- [Owner guide](docs/admin-guide.md) · [Journal management](docs/blog-management.md)
+- [Installation](docs/installation.md) · [Deployment](docs/deployment.md)
+- [Free hosting assessment](docs/hosting-setup.md) · [Backups and migration](docs/backups.md)
+- [Testing history](docs/testing.md) · [Original local delivery](docs/local-delivery.md)
 
 ## Source layout
 
 ```
-wordpress/wp-content/themes/muneeb-mart/       Installable classic theme + editor support
-wordpress/wp-content/plugins/muneeb-mart-core/ Store features independent of presentation
-demo-content/                               CSV fallback and import guide
-scripts/                                    Local runtime, data preparation, QA, packaging
-docs/                                       Installation, operations, testing, release notes
-releases/                                   Generated installation ZIPs (ignored in Git)
-.local/                                     Private local runtime and credentials (ignored)
+wordpress/wp-content/themes/muneeb-mart/       Theme and optimized assets
+wordpress/wp-content/plugins/muneeb-mart-core/ Custom commerce/forms/editorial setup
+demo-content/                               Product CSV and import guidance
+scripts/                                    Local tools, QA and packaging
+docs/                                       Operations, reports and screenshots
+releases/                                   Generated installation ZIPs (ignored)
+.local/                                     Private runtime, database and credentials (ignored)
 ```
 
-## Architecture and design
+## Before real orders
 
-- Classic PHP theme with `theme.json`, Gutenberg content, custom logo, editable menu, Customizer branding, headings, images, contact details, and accent color.
-- Native WooCommerce product templates, gallery/zoom, variation selection, quantity, related products, checkout, account endpoints, and real order confirmation.
-- Lightweight server-side collection, attribute, price and stock filters with shareable URLs, sorting and pagination. No large filter plugin.
-- A browser-local wishlist, accessible search dialog and mobile menu, reduced-motion support, and local optimized WebP imagery.
-- Private enquiry and subscriber records, explicit consent, form validation, nonces, honeypot, rate limiting, and WordPress privacy export/erasure integration.
-- Development gateway creates **on-hold TEST orders**, reduces inventory, and collects no money. It never fabricates a payment success.
+Replace fictional inventory and demonstration photographs with verified product information. Approve business identity, contacts, shipping/taxes, returns/privacy/terms, secure payments and reliable mail. Verify notification delivery, password resets and scheduling. Newsletter consent is stored; campaigns require delivery and unsubscribe configuration. Development checkout does not certify a live payment gateway.
 
-## Boundaries before production
-
-All 20 watches, specifications, inventory and prices are demonstration content. The original generated photographs illustrate style and do not verify any product attribute. No ratings, sales totals, warranty, water resistance, delivery timeframe, free delivery or discounts are claimed. Policy pages are editable owner-review drafts. Published support details and social links are empty until configured. Newsletter consent is stored; connect a mailing service and implement its unsubscribe links before sending campaigns. Enquiries are saved; optional notification email requires verified SMTP. Local checkout is a test, not payment-gateway certification.
-
-GitHub stores and validates the custom source. The owner requested localhost instead of public hosting, so no public deployment is configured. Products, orders, accounts, uploaded media and content remain in the local WordPress database and media library; source updates do not replace them.
-
-## License
-
-Custom theme and plugin: GPL-2.0-or-later. WordPress, WooCommerce, PHP and MariaDB retain their respective licenses. Generated asset provenance is in `docs/assets.md`.
+Custom code is GPL-2.0-or-later. WordPress, WooCommerce and runtime tools retain their licences. See [asset provenance](docs/assets.md).

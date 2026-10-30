@@ -7,7 +7,7 @@ $check('PKR currency',get_woocommerce_currency()==='PKR');$check('Custom theme a
 $variable=wc_get_product(wc_get_product_id_by_sku('MM-DEMO-014'));$check('Variable product has two variations',$variable&&$variable->is_type('variable')&&count($variable->get_children())===2);
 $check('Out-of-stock product handled',!wc_get_product(wc_get_product_id_by_sku('MM-DEMO-019'))->is_in_stock());
 $check('Native cart/checkout/account pages',get_post(wc_get_page_id('cart'))&&get_post(wc_get_page_id('checkout'))&&get_post(wc_get_page_id('myaccount')));
-$terms=get_terms(['taxonomy'=>'product_cat','hide_empty'=>false]);$check('Nine managed collections',count(array_filter($terms,fn($t)=>$t->slug!=='uncategorized'))===9);
+$terms=get_terms(['taxonomy'=>'product_cat','hide_empty'=>false]);$check('Eleven managed collections',count(array_filter($terms,fn($t)=>$t->slug!=='uncategorized'))===11);
 $check('Four global filter attributes',count(wc_get_attribute_taxonomies())===4);
 $check('Product imagery attached',count(array_filter($products,fn($p)=>$p->get_image_id()>0))===20);
 $check('Local test gateway available',(WC()->payment_gateways()->payment_gateways()['mm_test']??null)?->is_available());

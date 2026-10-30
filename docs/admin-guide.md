@@ -27,3 +27,12 @@ The newsletter records email, explicit consent, and timestamp. This version does
 ## Launch
 
 Replace every demo product, verify images and claims, approve the policy drafts and business details, configure shipping/tax/payments, test transactional mail and a sandbox transaction, make backups, then disable demonstration mode. Change `WP_ENVIRONMENT_TYPE` to `production`, disable debug logging/display, enable HTTPS and caching exclusions for commerce/session pages, and allow indexing only after final review.
+
+
+## Journal additions in version 1.2
+
+Open Posts to publish or edit articles, and Posts → Categories to manage the ten Journal categories. Set a featured image and excerpt, then use the MUNEEB MART · Search appearance box for SEO title and description. Published articles automatically enter the homepage’s latest three. See [blog management](blog-management.md) for drafts, scheduling, authors, tags and indexing.
+
+Pages now also include size, care, gift, payment and support guides plus native order tracking. Products → Categories includes eleven collections, including Executive and Budget. Collection membership and prices remain editable in WooCommerce. The “Signature edit” uses configured featured products and makes no sales-ranking claim.
+
+For code updates use GitHub review → git pull --ff-only → npm run sync. Keep database content and uploads. Run npm run backup for a private SQL/config/media export; see [backups and migration](backups.md).
